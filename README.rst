@@ -1,16 +1,5 @@
 .. image:: https://img.shields.io/badge/License-LGPL%20v2.1-blue.svg
     :target: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html
-    
-.. image:: https://github.com/aewallin/openvoronoi/actions/workflows/cmake-build.yml/badge.svg
-    :target: https://github.com/aewallin/openvoronoi/actions/workflows/cmake-build.yml
-
-.. image:: https://github.com/aewallin/openvoronoi/actions/workflows/cmake-build-and-test.yml/badge.svg
-    :target: https://github.com/aewallin/openvoronoi/actions/workflows/cmake-build-and-test.yml
-
-.. image:: https://coveralls.io/repos/github/aewallin/openvoronoi/badge.svg?branch=master
-    :target: https://coveralls.io/github/aewallin/openvoronoi?branch=master
-
-
 
 OpenVoronoi
 ===========
@@ -23,10 +12,7 @@ Currently point-sites and line-segment sites work. Arc-sites are being worked
 on. The incremental topology-oriented (Sugihara-Iri and/or Held) 
 algorithm is used (see References).
 
-The core algorithm is in C++ with python bindings using Boost Python. 
-There are many python examples that use VTK for visualization. As of 2018 VTK 6 is used for visualizations.
-Some tests use a random polygon generator (https://github.com/aewallin/randompolygon) and a 
-font-geometry generator based on FreeType (https://github.com/aewallin/truetype-tracer)
+The core algorithm is in C++. 
 
 OpenVoronoi is written by Anders Wallin (anders.e.e.wallin "at" gmail.com)
 and initially released under GPLv3. In July 2018, license was changed to LGPL2.1 (see COPYING) with permission and cooperation of all contributors (Issue #35).
@@ -44,10 +30,6 @@ https://github.com/aewallin/openvoronoi
 Launchpad PPA (not updated regularly)
 https://launchpad.net/~anders-e-e-wallin/+archive/cam
 
-Build, Test, and Code-coverage dashboard:
-http://my.cdash.org/index.php?project=OpenVoronoi
-(not updated regularly! ToDo: set up continuous build/test server + website)
-
 The mailing-list for OpenVoronoi is at
 https://groups.google.com/forum/?hl=en#!forum/opencamlib
 
@@ -57,41 +39,22 @@ https://picasaweb.google.com/106188605401091280402/OpenVoronoiExamples
 Required Dependencies:
 
 - cmake
-- libqd-dev             http://crd.lbl.gov/~dhbailey/mpdist/
 - Boost graph library   
-- graphviz  (visualization for graph algorithms)
 
 Optional Dependencies:
 
 - git            (required only for the version-string)
-- python         (if python bindings are built/used)
-- Boost python   (if python bindings are built)
 - doxygen        (for building documentation)
-- asymptote      (to build white-paper figures)
-- lyx            (to build white-paper)
-- libvtk         (many python-scripts use VTK for visualization)
-- python-vtk     (VTK python bindings)
-- truetype-tracer https://github.com/aewallin/truetype-tracer (some tests)
-- randompolygon   https://github.com/aewallin/randompolygon (some tests)
 
 Build/Install instructions
 ==========================
 
-From PPA::
-
- sudo add-apt-repository ppa:anders-e-e-wallin/cam
- sudo apt-get update
- sudo apt-get install openvoronoi
-
 From source::
 
-$ git clone git://github.com/aewallin/openvoronoi.git
+$ git clone https://github.com/LarsLive/openvoronoi.git
 $ cd openvoronoi
-$ mkdir bld
-$ cd bld
-$ cmake ../src
+$ ./build.sh
 $ make
-$ sudo make install
 
 Documentation
 =============
@@ -103,20 +66,17 @@ It has its own CMakeLists.txt file which builds a PDF file.
 Tests
 =====
 
-Both c++ and python tests are found in src/test/. These are run with CTest.
+c++ tests are found in src/test/. These are run with CTest.
 In the build-directory either "make test" or "ctest" will run all tests. 
 You can run only tests that have e.g. "ttt" in the test-name with
 "ctest -R ttt"
 Currently the tests do not produce any output (png or svg output could be an option?)
-
 
 Organization
 ============
 
 - doc/        has documentation in lyx format, with figures in asymptote format. 
             Build a PDF with the CMakeLists.txt in this directory.
-- cpp_examples/ has c++ examples (more needed)
-- python_examples/ has Python examples. Many use VTK and VTK's python bindingd for visualization.
 - src/        has the source for the main algorithm
 - src/solvers has vd-vertex solver code
 - src/py      has python wrapping code
@@ -126,7 +86,7 @@ Organization
 Contributing
 ============
 
-See the TODO file. Fork the github repo, create a feature branch, commit yor 
+See the TODO file. Fork the github repo, create a feature branch, commit your 
 changes, test. Make a short description of your changes and create a pull request.
 Follow the coding-style of the existing code. One fix/feature per pull request.
 Contributed code must comply with the LGPL. Provide short doxygen-formatted 
