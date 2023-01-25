@@ -10,7 +10,7 @@
 *.a
 *.pyc
 *.eps
-
+*.*~
 # Other build litter #
 ######################
 bld
