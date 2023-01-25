@@ -83,7 +83,7 @@
 #include <boost/graph/adjacency_list.hpp>
 
 
-#include <qd/qd_real.h> 
+//#include <qd/qd_real.h>
 #include <sstream>
 
 #include "common/point.hpp"
@@ -181,6 +181,7 @@ struct Eq {
 /// preliminary offset-prerensentations. experiental...
 class Ofs {
 public:
+	virtual ~Ofs() {}
     /// string
     virtual std::string str() = 0;
     /// radius, -1 if line
@@ -198,6 +199,7 @@ public:
     /// \param p1 start point
     /// \param p2 end point
     LineOfs(Point p1, Point p2) : _start(p1), _end(p2) {}
+    virtual ~LineOfs() {}
     virtual std::string str() {
         std::ostringstream o;
         o << "LineOfs from:"<<_start<<" to " << _end << "\n";
@@ -219,6 +221,7 @@ public:
     /// \param cen center Point
     /// \param rad radius
     ArcOfs(Point p1, Point p2, Point cen, double rad) : _start(p1), _end(p2), c(cen), r(rad) {}
+    virtual ~ArcOfs() {};
     virtual std::string str() {
         std::ostringstream o;
         o << "ArcOfs  from:"<<_start<<" to " << _end << " r="<<r<<"\n";
@@ -239,7 +242,7 @@ protected:
 class Site {
 public:
     /// ctor
-    Site() {}
+    Site(): face(0) {}
     /// dtor
     virtual ~Site() {}
     /// return closest point on site to given point p
@@ -261,8 +264,8 @@ public:
         return eq2;
     } 
     /// return equation parameters
-    Eq<qd_real> eqp_qd(double kk) const {
-        Eq<qd_real> eq2;
+    Eq<long double> eqp_qd(double kk) const {
+        Eq<long double> eq2;
         eq2=eq;
         eq2.k *= kk;
         return eq2;
@@ -357,7 +360,7 @@ protected:
 class PointSite : public Site {
 public:
     /// ctor
-    PointSite( const Point& p, HEFace f=0): _p(p)  {
+    PointSite( const Point& p, HEFace f=0):v(0), _p(p)  {
         face = f;
         eq.q = true;
         eq.a = -2*p.x;
@@ -393,11 +396,11 @@ public:
         return out;
     }
     virtual bool in_region(const Point& ) const {return true;}
-    virtual double in_region_t(const Point& p) const {return -1;}
+    virtual double in_region_t(const Point& ) const {return -1;}
     virtual HEVertex vertex() {return v;}
     HEVertex v; ///< vertex descriptor of this PointSite
 private:
-    PointSite() {} // don't use!
+    PointSite():v(0) {} // don't use!
     Point _p; ///< position
 };
 

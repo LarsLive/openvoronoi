@@ -20,7 +20,7 @@
 #pragma once
 
 // double-double and quad-double datatype and arithmetic package
-#include <qd/qd_real.h> // http://crd.lbl.gov/~dhbailey/mpdist/
+//#include <qd/qd_real.h> // http://crd.lbl.gov/~dhbailey/mpdist/
 
 #include "graph.hpp"
 #include "vertex.hpp"

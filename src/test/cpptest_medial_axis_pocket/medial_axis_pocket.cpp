@@ -40,10 +40,9 @@ int main(int argc,char *argv[]) {
         debug_mode = true;
 
     
-    ovd::VoronoiDiagram* vd = new ovd::VoronoiDiagram(1,100); // (r, bins)
+    ovd::VoronoiDiagram* vd = new ovd::VoronoiDiagram(1); // (r)
     // double r: radius of circle within which all input geometry must fall. use 1 (unit-circle). Scale geometry if necessary.
-    // int bins:  bins for face-grid search. roughly sqrt(n), where n is the number of sites is good according to Held.
-     
+
     std::cout << ovd::version() << "\n"; // the git revision-string
     ovd::Point p0(-0.1,-0.2);
     ovd::Point p1(0.2,0.1);

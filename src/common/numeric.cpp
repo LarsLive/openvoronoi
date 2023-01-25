@@ -20,7 +20,7 @@
 
 #include "numeric.hpp"
 
-#include <qd/qd_real.h> 
+//#include <qd/qd_real.h>
 #include <cmath>
 #include <cassert>
 
@@ -51,10 +51,10 @@ namespace numeric {
         else
             return val;
     }
-    qd_real chop(qd_real val) {
-        qd_real _epsilon = 1e-20; // should leave 47bits of precision
+    long double chop(long double val) {
+        long double _epsilon = 1e-20; // should leave 47bits of precision
         if (fabs(val) < _epsilon) 
-            return qd_real(0);
+            return (0);
         else
             return val;
     }

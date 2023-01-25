@@ -72,8 +72,8 @@ namespace solvers {
 class SEPSolver : public Solver {
 public:
 
-int solve( Site* s1, double k1, 
-           Site* s2, double k2, 
+int solve( Site* s1, double ,
+           Site* s2, double ,
            Site* s3, double k3, std::vector<Solution>& slns ) {
     assert( s1->isLine() && s2->isPoint() );
     assert( s3->isLine() ); // LineSites always inserted after PointSites. 

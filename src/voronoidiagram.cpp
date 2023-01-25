@@ -34,9 +34,7 @@ namespace ovd {
 
 /// \brief create a VoronoiDiagram
 /// \param far is the radius of a circle within which all sites must be located. use far==1.0
-/// \param n_bins is the number of bins for FaceGrid, the bucket-search for nearest-neighbors 
-///        used in insert_point_site(). Use roughly sqrt(N) for a voronoi-diagram with N sites.
-VoronoiDiagram::VoronoiDiagram(double far, unsigned int n_bins) {
+VoronoiDiagram::VoronoiDiagram(double far) {
     kd_tree = new kdtree::KDTree<kd_point>(2); // kd-tree with dimension 2    
     vd_checker = new VoronoiDiagramChecker( g ); // helper-class that checks topology/geometry
     vpos = new VertexPositioner( g ); // helper-class that positions vertices

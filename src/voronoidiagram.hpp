@@ -130,7 +130,7 @@ typedef kdtree::KDTree<kd_point> kd_type;
 ///  voronoi-edges are dual to delaunay-edges
 class VoronoiDiagram {
 public:
-    VoronoiDiagram(double far, unsigned int n_bins);
+    VoronoiDiagram(double far);
     virtual ~VoronoiDiagram();
     int insert_point_site(const Point& p);
     bool insert_line_site(int idx1, int idx2, int step=99); // default step should make algorithm run until the end!

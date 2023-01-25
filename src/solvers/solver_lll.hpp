@@ -62,32 +62,32 @@ int solve( Site* s1, double k1,
     
     assert( s1->isLine() && s2->isLine() && s3->isLine() );
     
-    std::vector< Eq<qd_real> > eq; // equation-parameters, in quad-precision
+    std::vector< Eq< long double> > eq; // equation-parameters, in quad-precision
     boost::array<Site*,3> sites = {{s1,s2,s3}};    
-    boost::array<double,3> kvals = {{k1,k2,k3}};
+    boost::array< double,3> kvals = {{k1,k2,k3}};
     for (unsigned int i=0;i<3;i++)
         eq.push_back( sites[i]->eqp_qd( kvals[i] ) );
     
     unsigned int i = 0, j=1, k=2;
-    qd_real detA = chop( determinant( eq[i].a, eq[i].b, eq[i].k, 
+    long double detA = chop( determinant( eq[i].a, eq[i].b, eq[i].k,
                                       eq[j].a, eq[j].b, eq[j].k, 
                                       eq[k].a, eq[k].b, eq[k].k ) ); 
     double det_eps = 1e-6;
     if ( fabs(detA) > det_eps ) {
-        qd_real sol_t = determinant(  eq[i].a, eq[i].b, -eq[i].c, 
+        long double sol_t = determinant(  eq[i].a, eq[i].b, -eq[i].c,
                                       eq[j].a, eq[j].b, -eq[j].c, 
                                       eq[k].a, eq[k].b, -eq[k].c ) / detA ; 
         if (sol_t >= 0) {
-            qd_real sol_x = determinant(  -eq[i].c, eq[i].b, eq[i].k, 
+            long double sol_x = determinant(  -eq[i].c, eq[i].b, eq[i].k,
                                           -eq[j].c, eq[j].b, eq[j].k, 
                                           -eq[k].c, eq[k].b, eq[k].k ) / detA ; 
-            qd_real sol_y = determinant(  eq[i].a, -eq[i].c, eq[i].k, 
+            long double sol_y = determinant(  eq[i].a, -eq[i].c, eq[i].k,
                                           eq[j].a, -eq[j].c, eq[j].k, 
                                           eq[k].a, -eq[k].c, eq[k].k ) / detA ; 
             if (debug && !silent ) 
-                std::cout << " solution: " << Point( to_double(sol_x), to_double(sol_y) ) << " t=" << to_double(sol_t) << " k3=" << k3 << " detA=" << to_double(detA) << "\n";
+                std::cout << " solution: " << Point( (sol_x), (sol_y) ) << " t=" << (sol_t) << " k3=" << k3 << " detA=" << (detA) << "\n";
             
-            slns.push_back( Solution( Point( to_double(sol_x), to_double(sol_y) ), to_double(sol_t), k3 ) ); // k3 just passes through without any effect!?
+            slns.push_back( Solution( Point( (sol_x), (sol_y) ), (sol_t), k3 ) ); // k3 just passes through without any effect!?
             return 1;
         }
     } else {
@@ -95,7 +95,7 @@ int solve( Site* s1, double k1,
         for (i = 0; i < 3; i++)
         {
             j = (i+1)%3;
-            double delta = to_double(fabs(eq[i].a*eq[j].b - eq[j].a*eq[i].b));
+            double delta = (fabs(eq[i].a*eq[j].b - eq[j].a*eq[i].b));
             if (delta <= 1024.0*std::numeric_limits<double>::epsilon())
             {
                 s1 = sites[i];

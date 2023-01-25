@@ -11,14 +11,10 @@
 #include "common/point.hpp"
 #include "utility/vd2svg.hpp"
 
-#include <boost/random.hpp>
-#include <boost/timer.hpp>
 #include <boost/foreach.hpp>
-#include <boost/program_options.hpp>
 
-
-int main(int argc,char *argv[]) {
-    ovd::VoronoiDiagram* vd = new ovd::VoronoiDiagram(1,10);
+int main() {
+    ovd::VoronoiDiagram* vd = new ovd::VoronoiDiagram(1);
     
     std::cout << "OpenVoronoi version: " << ovd::version() << "\n";
     

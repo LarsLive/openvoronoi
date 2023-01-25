@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
+#pragma once
 #include <string>
 #include <iostream>
 
@@ -59,7 +59,7 @@ inline svg::Color get_edge_color(ovd::HEGraph& g, ovd::HEEdge e) {
     return svg::Color::Blue;
 }
 
-inline void write_line_to_svg(ovd::HEGraph& g, svg::Document& doc, ovd::Point src, ovd::Point trg, svg::Color col) {
+inline void write_line_to_svg(ovd::HEGraph&, svg::Document& doc, ovd::Point src, ovd::Point trg, svg::Color col) {
     ovd::Point src_p = scale( src );
     ovd::Point trg_p = scale( trg );
     
@@ -68,7 +68,7 @@ inline void write_line_to_svg(ovd::HEGraph& g, svg::Document& doc, ovd::Point sr
     doc << polyline;
 }
 
-inline void write_arc_to_svg(ovd::HEGraph& g, svg::Document& doc, ovd::Point src, ovd::Point trg, double r, ovd::Point ctr, bool cw, svg::Color col) {
+inline void write_arc_to_svg(ovd::HEGraph& , svg::Document& doc, ovd::Point src, ovd::Point trg, double r, ovd::Point ctr, bool cw, svg::Color col) {
     ovd::Point src_p = scale( src );
     ovd::Point trg_p = scale( trg );
     double radius = scale( r );

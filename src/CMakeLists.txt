@@ -5,15 +5,6 @@ cmake_minimum_required(VERSION 3.0)
 # figure out the gcc version
 INCLUDE(gcc_version.cmake)
 
-# uninstall target
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-  IMMEDIATE @ONLY)
-
-add_custom_target(uninstall
-  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
-
 # experimental use of clang, since it detects more warnings/errors than gcc
 option(USE_CLANG "build application with clang" OFF) # OFF is the default
 # Note: useful packages: clang, llvm, gcc-multilib
@@ -52,7 +43,7 @@ MESSAGE(STATUS " Your linker is = " ${CMAKE_LINKER})
 #
 if (UNIX AND NOT APPLE)
   MESSAGE(STATUS "setting strict gcc options: -Wall -Werror etc...")
-  add_definitions(-Werror -Wall -Wundef -Wno-error=uninitialized -Wshadow  -Wno-long-long -Wno-deprecated -pedantic -pedantic-errors)
+  #add_definitions(-Werror -Wall -Wundef -Wno-error=uninitialized -Wshadow  -Wno-long-long -Wno-deprecated -pedantic -pedantic-errors)
 
   # some reasons why we don't enable certain errors:
   # -Wfloat-equal        gives warning when comparing float/double with != or ==:  
@@ -73,16 +64,9 @@ endif ()
 # set(CMAKE_BUILD_TYPE Coverage)
 MESSAGE(STATUS " CMAKE_BUILD_TYPE  = " ${CMAKE_BUILD_TYPE})
 
-option(BUILD_PYTHON_MODULE "Build python-module? " ON) # building the python-module optional, ON by default
-# when we build only the pure c++ library we do not need boost-ptyhon
-# command-line for a build without boost-python:
-# cmake -DBUILD_PYTHON_MODULE=OFF ../src
 
 option(BUILD_DOC "Build doxygen documentation? " ON)
-
 option(BUILD_CPP_TESTS "Build c++ tests?" ON) 
-option(BUILD_PY_TESTS "Build/configure Python tests?" ON) 
-
 
 if (CMAKE_BUILD_TYPE MATCHES "Profile")
   set(CMAKE_CXX_FLAGS_PROFILE "-p -g -DNDEBUG")
@@ -108,16 +92,6 @@ if (CMAKE_BUILD_TYPE MATCHES "Coverage")
   MESSAGE(STATUS " CMAKE_CXX_FLAGS = " ${CMAKE_CXX_FLAGS})
 endif (CMAKE_BUILD_TYPE MATCHES "Coverage")
 
-# this figures out the Python include directories and adds them to the
-# header file search path
-MESSAGE(STATUS "Your system is: ${CMAKE_SYSTEM_NAME}")
-IF( ${BUILD_PYTHON_MODULE} MATCHES ON)
-  find_package (PythonLibs) # 2.7 EXACT REQUIRED 
-  include_directories(${PYTHON_INCLUDE_DIRS})
-  MESSAGE(STATUS "Python includes: " ${PYTHON_INCLUDE_DIRS})
-ENDIF()
-
-
 
 find_package( Boost REQUIRED )
 if(Boost_FOUND)
@@ -131,17 +105,10 @@ endif()
 
 # find boost-python
 IF( ${BUILD_PYTHON_MODULE} MATCHES ON)
-  find_package( Boost COMPONENTS python REQUIRED)
+#  find_package( Boost COMPONENTS python REQUIRED)
   MESSAGE(STATUS "Boost_PYTHON_LIBRARY is: " ${Boost_PYTHON_LIBRARY})
 ENDIF()
 
-# find the qd library
-set( CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} ) # Findqd.cmake is in this dir
-find_package( qd REQUIRED ) 
-include_directories(${QD_INCLUDE_DIR})
-
-message( STATUS "libqd include dir = ${QD_INCLUDE_DIR}")
-message( STATUS "libqd library = ${QD_LIBRARY}")
 message( STATUS "build type = ${CMAKE_BUILD_TYPE}")
 
 ################ create version_string.hpp, http://stackoverflow.com/questions/3780667
@@ -228,9 +195,8 @@ set_target_properties(libopenvoronoi PROPERTIES PREFIX "")
 if (NOT APPLE)
   set_target_properties(libopenvoronoi PROPERTIES VERSION ${MY_VERSION}) 
 endif (NOT APPLE)
-# link against libqd here. 
-# an alternative is to link libqd when an application using openvoronoi is built.
-target_link_libraries(libopenvoronoi ${Boost_LIBRARIES} ${QD_LIBRARY}) 
+
+target_link_libraries(libopenvoronoi ${Boost_LIBRARIES} ) 
 
 # c++lib for coverage testing
 add_library(
@@ -245,61 +211,6 @@ set_target_properties( libopenvoronoi-coverage
   CMAKE_BUILD_TYPE Coverage
   CMAKE_CXX_FLAGS "-O0 -fprofile-arcs -ftest-coverage -fno-inline ${CMAKE_CXX_FLAGS_DEBUG}"
   )
-
-
-# the Python module
-IF( ${BUILD_PYTHON_MODULE} MATCHES ON)
-
-  message(STATUS "PYTHON_LIBRARIES = ${PYTHON_LIBRARIES}")
-  message(STATUS "PYTHON_EXECUTABLE = ${PYTHON_EXECUTABLE}")
-  message(STATUS "PYTHON_INCLUDE_DIRS = ${PYTHON_INCLUDE_DIRS}")
-  # static c++ library, linked with the python module below
-  add_library(
-    openvoronoi_static
-    STATIC
-    ${OVD_SRC}
-    )
-
-  # the Python module itself
-  add_library(
-    openvoronoi
-    MODULE
-    py/open_voronoi_py.cpp
-    )
-  target_link_libraries(openvoronoi openvoronoi_static ${Boost_LIBRARIES} ${QD_LIBRARY} ${PYTHON_LIBRARIES}) 
-  set_target_properties(openvoronoi PROPERTIES PREFIX "") 
-  if (NOT APPLE)
-    set_target_properties(openvoronoi PROPERTIES VERSION ${MY_VERSION}) 
-  endif (NOT APPLE)
-  # this figures out where to install the Python modules
-  execute_process(
-    COMMAND python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
-    OUTPUT_VARIABLE Python_site_packages
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    ) # on Ubuntu 11.10 this outputs: /usr/local/lib/python2.7/dist-packages
-
-  # strip away /usr/local/  because that is what CMAKE_INSTALL_PREFIX is set to
-  # also, since there is no leading "/", it makes ${Python_site_packages} a relative path.
-  # STRING(REGEX REPLACE "/usr/local/(.*)$" "\\1" Python_site_packages "${Python_site_packages}" )
-  MESSAGE(STATUS "CMAKE_INSTALL_PREFIX is : " ${CMAKE_INSTALL_PREFIX})
-  MESSAGE(STATUS "Python libraries will be installed to: " ${Python_site_packages})
-
-  # this installs the python library
-  install(
-    TARGETS openvoronoi
-    LIBRARY 
-    DESTINATION ${Python_site_packages}
-    )
-
-  # this installs the python VTK-visualization helper py-files
-  install(
-    FILES ${OpenVoronoi_SOURCE_DIR}/py/ovdvtk.py
-    ${OpenVoronoi_SOURCE_DIR}/py/ngc_writer.py
-    ${OpenVoronoi_SOURCE_DIR}/py/ovdgenerators.py
-    DESTINATION ${Python_site_packages}
-    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-    )
-ENDIF() # end Python module
 
 # this installs the c++ library
 install(
@@ -361,11 +272,11 @@ add_custom_target(coverage-report
 # Debian package
 # "make package" will build a binary package
 # "make spackage" will build a source-package (for uploading to a PPA)
-include(deb/package_details.cmake) 
-add_custom_target(spackage 
-  ${CMAKE_COMMAND} -D SRC_DIR:STRING=${CMAKE_SOURCE_DIR} 
-  -D MY_VERSION:STRING=${MY_VERSION} 
-  -C ${CMAKE_SOURCE_DIR}/deb/package_details.cmake # a lot of variables etc. defined here
-  -P ${CMAKE_CURRENT_SOURCE_DIR}/deb/DebSourcePPA.cmake # the script that builds a debian package
-  ) 
-include(CPack) # this should be last
+#include(deb/package_details.cmake) 
+#add_custom_target(spackage 
+#  ${CMAKE_COMMAND} -D SRC_DIR:STRING=${CMAKE_SOURCE_DIR} 
+#  -D MY_VERSION:STRING=${MY_VERSION} 
+#  -C ${CMAKE_SOURCE_DIR}/deb/package_details.cmake # a lot of variables etc. defined here
+#  -P ${CMAKE_CURRENT_SOURCE_DIR}/deb/DebSourcePPA.cmake # the script that builds a debian package
+#  ) 
+#include(CPack) # this should be last

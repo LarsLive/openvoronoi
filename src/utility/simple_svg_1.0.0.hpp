@@ -31,7 +31,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ******************************************************************************/
-
+#pragma once
 #ifndef SIMPLE_SVG_HPP
 #define SIMPLE_SVG_HPP
 

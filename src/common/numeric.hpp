@@ -22,7 +22,7 @@
 #define NUMERIC_HPP
 
 #include <vector>
-#include <qd/qd_real.h> 
+//#include <qd/qd_real.h>
 
 namespace ovd {
 
@@ -32,7 +32,7 @@ namespace numeric {
     //double chop8(double a);
     double chop(double val);
     double chop(double val, double tolerance);
-    qd_real chop(qd_real val);
+    long double chop(long double val);
     
     template<class Scalar>
     Scalar sq( Scalar x) {return x*x;}

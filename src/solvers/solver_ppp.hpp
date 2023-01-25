@@ -58,22 +58,22 @@ struct scalar_pt {
 // with the qd_real number-type we need to_double() to get the solution coordinates as double type.
 /// \brief template-specialization for qd_real
 template<>
-struct scalar_pt<qd_real> {
-    scalar_pt<qd_real>() : x(qd_real(0)), y(qd_real(0)) {}
+struct scalar_pt<long double> {
+    scalar_pt<long double>() : x((0)), y((0)) {}
     /// \param xi x coordinate
     /// \param yi y coordinate
-    scalar_pt<qd_real>(qd_real xi, qd_real yi) : x(xi), y(yi) {}
+    scalar_pt<long double>(long double xi, long double yi) : x(xi), y(yi) {}
     
     /// x coordinate
-    qd_real x;
+    long double x;
     /// y coordinate
-    qd_real y;
+    long double y;
     /// return x coordinate as double
-    double getx() { return to_double(x); }
+    long double getx() { return (x); }
     /// return y coordinate as double
-    double gety() { return to_double(y); }
+    long double gety() { return (y); }
     /// assignment
-    scalar_pt<qd_real> &operator=(const Point& p) {
+    scalar_pt<long double> &operator=(const Point& p) {
         x = p.x;
         y = p.y;
         return *this;
