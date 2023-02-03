@@ -10,7 +10,7 @@ function prepareDir()
     cd $1
 }
 
-prepareDir build/linux
+prepareDir build/$SMTE_SYS
 
 pwd
 
